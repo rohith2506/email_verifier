@@ -3,6 +3,9 @@ A simple markhov model which takes list of emails and predicts the probability
 of each n-gram based on previous n-gram
 Train with both good and bad emails
 
+problems:
+1) why can't i do it for character vs character instead of n-grams vs n-grams???
+
 @Author: Rohith Uppala
 '''
 
@@ -45,11 +48,14 @@ class MarkhovModel(object):
 			n_grams_list = self.n_grams_dict.keys()
 			for i in range(0, len(n_grams_list)):
 				for j in range(i+1, len(n_grams_list)):
+					print i, j
 					e1, e2 = n_grams_list[i], n_grams_list[j]
 					c1, c2 = self.n_grams_dict[e1], self.n_grams_dict[e2]
 					p1, p2 = self.n_grams_dict.get(e1+e2, 0) * 1.0 / c1, self.n_grams_dict.get(e1+e2, 0) * 1.0 / c2
-					self.n_grams_prob_dict[e1+"_"+e2] = p1
-					self.n_grams_prob_dict[e2+"_"+e1] = p2
+					if p1 != 0.0:
+						self.n_grams_prob_dict[e1+"_"+e2] = p1
+					if p2 != 0.0:
+						self.n_grams_prob_dict[e2+"_"+e1] = p2
 		except Exception, e:
 			print "Error in running bayes algo: %s" %(str(e))
 
